@@ -5,7 +5,6 @@ Description: >
   python-serverless-api
   API REST serverless com Python, Lambda, API Gateway e PostgreSQL
 
-# Configurações globais aplicadas a todas as funções
 Globals:
   Function:
     Runtime: python3.11
@@ -19,29 +18,27 @@ Globals:
         DB_PASSWORD: !Ref DBPassword
         DB_PORT:     "5432"
 
-# Parâmetros injetados no deploy (não ficam hardcoded)
+  Api:
+    Auth:
+      DefaultAuthorizer: CognitoAuthorizer
+      Authorizers:
+        CognitoAuthorizer:
+          UserPoolArn: !Sub "arn:aws:cognito-idp:sa-east-1:351395890880:userpool/sa-east-1_AvKUaGWO8"
+          
 Parameters:
   DBHost:
     Type: String
-    Description: Endpoint do RDS PostgreSQL
-
   DBName:
     Type: String
-    Description: Nome do banco de dados
     Default: python_serverless_api
-
   DBUser:
     Type: String
-    Description: Usuário do banco de dados
-
   DBPassword:
     Type: String
-    Description: Senha do banco de dados
-    NoEcho: true  # Não exibe o valor no console AWS
+    NoEcho: true
 
 Resources:
 
-  # Função Lambda principal
   UsersFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -81,7 +78,6 @@ Resources:
             Path: /users/{id}
             Method: DELETE
 
-# Outputs exibidos após o deploy
 Outputs:
   ApiUrl:
     Description: URL base da API

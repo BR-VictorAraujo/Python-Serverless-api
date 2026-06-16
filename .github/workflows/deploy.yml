@@ -57,8 +57,12 @@ jobs:
       - name: Deploy
         run: |
           sam deploy \
+            --stack-name python-serverless-api \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset \
+            --resolve-s3 \
+            --capabilities CAPABILITY_IAM \
+            --region sa-east-1 \
             --parameter-overrides \
               DBHost=${{ secrets.DB_HOST }} \
               DBName=${{ secrets.DB_NAME }} \

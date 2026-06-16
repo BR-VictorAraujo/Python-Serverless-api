@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Description: >
+  python-serverless-api
+  API REST serverless com Python, Lambda, API Gateway e PostgreSQL
+
+# Configurações globais aplicadas a todas as funções
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 30
+    MemorySize: 128
+    Environment:
+      Variables:
+        DB_HOST:     !Ref DBHost
+        DB_NAME:     !Ref DBName
+        DB_USER:     !Ref DBUser
+        DB_PASSWORD: !Ref DBPassword
+
+# Parâmetros injetados no deploy (não ficam hardcoded)
+Parameters:
+  DBHost:
+    Type: String
+    Description: Endpoint do RDS PostgreSQL
+
+  DBName:
+    Type: String
+    Description: Nome do banco de dados
+    Default: python_serverless_api
+
+  DBUser:
+    Type: String
+    Description: Usuário do banco de dados
+
+  DBPassword:
+    Type: String
+    Description: Senha do banco de dados
+    NoEcho: true  # Não exibe o valor no console AWS
+
+Resources:
+
+  # Função Lambda principal
+  UsersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: python-serverless-api-users
+      CodeUri: src/
+      Handler: handlers.users.lambda_handler
+      Description: CRUD de usuários
+      Events:
+
+        ListUsers:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: GET
+
+        CreateUser:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: POST
+
+        GetUser:
+          Type: Api
+          Properties:
+            Path: /users/{id}
+            Method: GET
+
+        UpdateUser:
+          Type: Api
+          Properties:
+            Path: /users/{id}
+            Method: PUT
+
+        DeleteUser:
+          Type: Api
+          Properties:
+            Path: /users/{id}
+            Method: DELETE
+
+# Outputs exibidos após o deploy
+Outputs:
+  ApiUrl:
+    Description: URL base da API
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+
+  UsersFunction:
+    Description: ARN da função Lambda
+    Value: !GetAtt UsersFunction.Arn

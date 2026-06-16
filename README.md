@@ -1,5 +1,7 @@
 # python-serverless-api
 
+![CI/CD](https://github.com/BR-VictorAraujo/Python-Serverless-api/actions/workflows/deploy.yml/badge.svg)
+
 API REST serverless construída com Python, AWS Lambda, API Gateway e PostgreSQL (RDS).
 
 ## Tecnologias

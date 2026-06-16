@@ -1,0 +1,15 @@
+version = 0.1
+
+[default.global.parameters]
+stack_name = "python-serverless-api"
+
+[default.build.parameters]
+cached = true
+parallel = true
+
+[default.deploy.parameters]
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = false
+resolve_s3 = true
+region = "sa-east-1"
+parameter_overrides = "DBHost=\"seu-endpoint.sa-east-1.rds.amazonaws.com\" DBName=\"python_serverless_api\" DBUser=\"postgres\" DBPassword=\"sua-senha-aqui\""
